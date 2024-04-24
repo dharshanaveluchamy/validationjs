@@ -1,0 +1,260 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registration Form</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: green;
+      margin: 0;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+    h2 {
+      text-align: center;
+    }
+    form {
+      max-width: 800px;
+      margin: 0 auto;
+      background-color: orange;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.1);
+    }
+    form div {
+      margin-bottom: 30px;
+      display: flex;
+      align-items: center;
+    }
+    label {
+      width: 150px;
+      font-weight: bold;
+    }
+    .error-message {
+      color: red;
+      margin-top: 5px;
+    }
+    button[type="submit"] {
+      width: 100%;
+      padding: 15px;
+      border: none;
+      background-color: darkolivegreen;
+      color: white;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+      transition: background-color 0.3s;
+    }
+    button[type="submit"]:hover {
+      background-color: #45a049;
+    }
+    #output {
+      margin-top: 40px;
+      padding: 20px;
+      background-color: green;
+      border-radius: 5px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  </style>
+</head>
+<body>
+  <h2>Registration Form</h2>
+  <form id="registrationForm">
+    <div>
+      <label for="firstName">First Name:</label>
+      <input type="text" id="firstName" name="firstName">
+      <div id="firstNameError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="lastName">Last Name:</label>
+      <input type="text" id="lastName" name="lastName">
+      <div id="lastNameError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email">
+      <div id="emailError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="course">Courses:</label><br>
+      <input type="checkbox" id="course1" name="courses" value="Web Technology">
+      <label for="course1">Web Technology</label><br>
+      <input type="checkbox" id="course2" name="courses" value="DBMS">
+      <label for="course2">DBMS</label><br>
+      <input type="checkbox" id="course3" name="courses" value="Operating system">
+      <label for="course3">Operating system</label>
+      <div id="courseError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="department">Department:</label>
+      <input type="text" id="department" name="department">
+      <div id="departmentError" class="error-message"></div>
+    </div>
+    <div>
+      <label>Year of Study:</label>
+      <input type="radio" id="year1" name="yearOfStudy" value="1">
+      <label for="year1">1st Year</label>
+      <input type="radio" id="year2" name="yearOfStudy" value="2">
+      <label for="year2">2nd Year</label>
+      <input type="radio" id="year3" name="yearOfStudy" value="3">
+      <label for="year3">3rd Year</label>
+      <input type="radio" id="year4" name="yearOfStudy" value="4">
+      <label for="year4">4th Year</label>
+      <div id="yearOfStudyError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="passingYear">Year of Passing:</label>
+      <select id="passingYear" name="passingYear">
+        <option value="">Select Year</option>
+        <option value="2022">2022</option>
+        <option value="2023">2023</option>
+        <option value="2024">2024</option>
+        <option value="2025">2025</option>
+        <option value="2026">2026</option>
+        <option value="2027">2027</option>
+        <option value="2028">2028</option>
+      </select>
+      <div id="passingYearError" class="error-message"></div>
+    </div>
+    <div>
+      <label>Gender:</label>
+      <input type="radio" id="male" name="gender" value="Male">
+      <label for="male">Male</label>
+      <input type="radio" id="female" name="gender" value="Female">
+      <label for="female">Female</label>
+      <input type="radio" id="other" name="gender" value="Other">
+      <label for="other">Other</label>
+      <div id="genderError" class="error-message"></div>
+    </div>
+    <div>
+      <label for="address">Address:</label>
+      <textarea id="address" name="address" rows="4"></textarea>
+      <div id="addressError" class="error-message"></div>
+    </div>
+    <button type="button" onclick="submitForm()">Submit</button>
+  </form>
+
+  <div id="output"></div>
+  <script>
+    document.addEventListener('DOMContentLoaded', function() {
+      const fields = document.querySelectorAll('#registrationForm input, #registrationForm select, #registrationForm textarea');
+      fields.forEach(field => {
+        field.addEventListener('blur', function() {
+          validateField(field);
+        });
+      });
+    });
+  
+    function validateField(field) {
+      const errorDiv = document.getElementById(field.id + 'Error');
+      if (field.type !== 'checkbox' && field.type !== 'radio') {
+        if (field.value.trim() === '') {
+          errorDiv.textContent = `${getFieldLabel(field)} is required`;
+        } else {
+          errorDiv.textContent = '';
+        }
+      } else if (field.type === 'checkbox') {
+        const checkedCourses = document.querySelectorAll('input[name="courses"]:checked');
+        if (checkedCourses.length === 0) {
+          document.getElementById('courseError').textContent = 'Please select at least one course';
+        } else {
+          document.getElementById('courseError').textContent = '';
+        }
+      } else if (field.type === 'radio') {
+        const radioGroup = document.querySelectorAll(`input[name="${field.name}"]:checked`);
+        if (radioGroup.length === 0) {
+          document.getElementById(field.name + 'Error').textContent = `${getFieldLabel(field)} is required`;
+        } else {
+          document.getElementById(field.name + 'Error').textContent = '';
+        }
+      }
+    }
+  
+    function getFieldLabel(field) {
+      const label = document.querySelector(`label[for="${field.id}"]`);
+      return label ? label.textContent : field.name;
+    }
+  
+    function submitForm() {
+      const isValid = validateForm();
+      if (isValid) {
+        displayOutput();
+      } else {
+        alert('Please fill out all required fields before submitting.');
+      }
+    }
+  
+    function validateForm() {
+      const fields = document.querySelectorAll('#registrationForm input, #registrationForm select, #registrationForm textarea');
+      let isValid = true;
+  
+      fields.forEach(field => {
+        const errorDiv = document.getElementById(field.id + 'Error');
+        if (field.type !== 'checkbox' && field.type !== 'radio') {
+          if (field.value.trim() === '') {
+            errorDiv.textContent = `${getFieldLabel(field)} is required`;
+            isValid = false;
+          } else {
+            errorDiv.textContent = '';
+          }
+        } else if (field.type === 'checkbox') {
+          const checkedCourses = document.querySelectorAll('input[name="courses"]:checked');
+          if (checkedCourses.length === 0) {
+            document.getElementById('courseError').textContent = 'Please select at least one course';
+            isValid = false;
+          } else {
+            document.getElementById('courseError').textContent = '';
+          }
+        } else if (field.type === 'radio') {
+          const radioGroup = document.querySelectorAll(`input[name="${field.name}"]:checked`);
+          if (radioGroup.length === 0) {
+            document.getElementById(field.name + 'Error').textContent = `${getFieldLabel(field)} is required`;
+            isValid = false;
+          } else {
+            document.getElementById(field.name + 'Error').textContent = '';
+          }
+        }
+      });
+  
+      return isValid;
+    }
+  
+    function displayOutput() {
+      const outputDiv = document.getElementById('output');
+      const fields = document.querySelectorAll('#registrationForm input, #registrationForm select, #registrationForm textarea');
+      let output = '<h2>Registration Details</h2><ul>';
+  
+      fields.forEach(field => {
+        if (field.type !== 'checkbox' && field.type !== 'radio' && field.value.trim() !== '') {
+          output += `<li><strong>${getFieldLabel(field)}:</strong> ${field.value}</li>`;
+        } else if (field.type === 'checkbox' && field.checked) {
+          output += `<li><strong>${getFieldLabel(field)}:</strong> ${field.value}</li>`;
+        } else if (field.type === 'radio' && field.checked) {
+          output += `<li><strong>${getFieldLabel(field)}:</strong> ${field.value}</li>`;
+        }
+      });
+  
+      output += '</ul>';
+      outputDiv.innerHTML = output;
+    }
+  
+    const formInputs = document.querySelectorAll('#registrationForm input, #registrationForm select, #registrationForm textarea');
+    formInputs.forEach((input, index) => {
+      input.addEventListener('focus', function () {
+        var prevInput = formInputs[index - 1];
+        if (prevInput && prevInput.value.trim() === '') {
+          var fieldName = prevInput.getAttribute('name');
+          alert("Please fill out the " + fieldName + " field first");
+          prevInput.focus();
+        }
+      });
+    });
+  </script>
+  
+</body>
+</html>
